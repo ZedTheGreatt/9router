@@ -19,4 +19,4 @@ http.createServer = (...args) => {
   return origCreate(...rest, wrapped);
 };
 
-require("./server.js");
+require("./.next/standalone/server.js");
