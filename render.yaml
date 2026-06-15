@@ -1,18 +1,15 @@
-# Render — 9router (free tier)
-# Deploy via: https://render.com/new
-# Select "Web Service" → connect repo → Render auto-detects this file.
+# Render — 9router (free tier, Node runtime)
+# Deploy via: https://render.com/new → Web Service → connect repo
 
 services:
   - type: web
     name: 9router
-    runtime: image
-    image:
-      url: https://github.com/ZedTheGreatt/9router.git
-      branch: master
-    dockerfilePath: ./Dockerfile
+    runtime: node
     plan: free
     healthCheckPath: /api/health
     autoDeploy: true
+    buildCommand: npm install && npm run build
+    startCommand: node custom-server.js
     envVars:
       - key: NODE_ENV
         value: production
