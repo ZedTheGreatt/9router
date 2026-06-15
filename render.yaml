@@ -1,0 +1,70 @@
+# Render Blueprint — 9router
+# https://render.com/docs/blueprint-spec
+
+services:
+  # ── Main Web Service ────────────────────────────────────────
+  - type: web
+    name: 9router
+    runtime: image
+    image:
+      url: https://github.com/ZedTheGreatt/9router.git
+      branch: master
+      buildCommand: ""
+      # Uses Dockerfile at repo root
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 20128
+      - key: DATA_DIR
+        value: /app/data
+      - key: JWT_SECRET
+        generateValue: true
+      - key: INITIAL_PASSWORD
+        generateValue: true
+      - key: BASE_URL
+        syncWithCredentialPool: false
+        # Set to your Render service URL after first deploy:
+        # value: https://9router.onrender.com
+      - key: CLOUD_URL
+        value: https://9router.com
+      - key: NEXT_PUBLIC_CLOUD_URL
+        value: https://9router.com
+      - key: ENABLE_REQUEST_LOGS
+        value: "false"
+      - key: OBSERVABILITY_ENABLED
+        value: "true"
+      - key: AUTH_COOKIE_SECURE
+        value: "true"
+      - key: REQUIRE_API_KEY
+        value: "false"
+      - key: API_KEY_SECRET
+        generateValue: true
+      - key: MACHINE_ID_SALT
+        generateValue: true
+    healthCheckPath: /api/health
+    autoDeploy: true
+    plan: free
+    disk:
+      name: data
+      mountPath: /app/data
+      sizeGB: 1
+
+  # ── Cronjob Pinger (keeps free-tier service alive) ──────────
+  # Pings /api/health every 10 minutes to prevent sleep.
+  # Requires: set PINGER_TARGET_URL to your web service URL.
+  - type: cron
+    name: 9router-pinger
+    runtime: image
+    image:
+      url: https://github.com/ZedTheGreatt/9router.git
+      branch: master
+      buildCommand: ""
+      dockerfilePath: ./pinger/Dockerfile
+    schedule: "*/10 * * * *"
+    envVars:
+      - key: PINGER_TARGET_URL
+        # Set to your web service URL:
+        # value: https://9router.onrender.com/api/health
+    plan: free
