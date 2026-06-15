@@ -16,7 +16,7 @@ services:
       - key: PORT
         value: 20128
       - key: DATA_DIR
-        value: /app/data
+        value: /mnt/data
       - key: JWT_SECRET
         generateValue: true
       - key: INITIAL_PASSWORD
@@ -39,5 +39,5 @@ services:
         value: https://9router.com
     disk:
       name: data
-      mountPath: /app/data
+      mountPath: /mnt/data
       sizeGB: 1
