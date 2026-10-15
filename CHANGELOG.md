@@ -1,3 +1,8 @@
+# Unreleased
+
+## Fixes
+- **Docker**: add the Railway service cache ID to the npm cache mount so Railway accepts the Dockerfile.
+
 # v0.5.99 (2026-10-08)
 
 ## Features
